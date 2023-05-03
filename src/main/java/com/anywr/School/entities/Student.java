@@ -1,6 +1,9 @@
 package com.anywr.School.entities;
 
+import java.util.Optional;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +30,7 @@ public class Student {
     private String lastName;
     
   
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="class_id")
     private SchoolClass schoolClass;
 
