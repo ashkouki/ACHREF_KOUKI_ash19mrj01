@@ -14,9 +14,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Entity
 public class SchoolClass {
 	
@@ -29,6 +30,4 @@ public class SchoolClass {
     @JoinColumn(name="teacher_id")
     private Teacher teacher;
 
-    @OneToMany(mappedBy="schoolClass")
-    private List<Student> students;
 }
