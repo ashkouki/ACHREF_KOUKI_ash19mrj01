@@ -1,16 +1,20 @@
 package com.anywr.School.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.anywr.School.dto.TeacherDto;
+import com.anywr.School.entities.SchoolClass;
 import com.anywr.School.entities.Teacher;
+import com.anywr.School.repositories.SchoolClassRepository;
 import com.anywr.School.repositories.TeacherRepository;
 
 @Service
@@ -23,6 +27,8 @@ public class TeacherService {
     private ModelMapper modelMapper;
     
     
+    @Autowired
+    private SchoolClassRepository schoolClassRepository;
     
     public List<TeacherDto> getAllTeachers() {
         List<Teacher> teachers = teacherRepository.findAll();
@@ -57,7 +63,10 @@ public class TeacherService {
         return teacher;
     }
     
-    public void deleteTeacher(Long id) {
-        teacherRepository.deleteById(id);
-    }
+
+    	  public void deleteTeacher(Long id) {
+    	        Optional<Teacher> teacher = teacherRepository.findById(id);
+    	        teacher.ifPresent(t -> teacherRepository.delete(t));
+    	    }
+    
 }
