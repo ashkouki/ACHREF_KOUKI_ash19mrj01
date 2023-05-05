@@ -77,7 +77,16 @@ public class StudentController {
             @RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "id") String sortBy) {
     	
     	Page<StudentDto> students = studentService.getStudentsWithClassName(name,pageNo, pageSize, sortBy);
-        return new ResponseEntity<>(students, HttpStatus.OK);
+        //return new ResponseEntity<>(students, HttpStatus.OK);
+    	Page<StudentDto> page = studentService.findPaginated(pageNo, pageSize, sortBy);
+        
+        if (students.isEmpty()) {
+        	return ResponseEntity.ok(page);
+        } else {
+            return ResponseEntity.ok(students);
+        }
+        
+        
     }
     
     

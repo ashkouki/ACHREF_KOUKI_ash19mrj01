@@ -1,6 +1,5 @@
 package com.anywr.School.dto;
 
-import com.anywr.School.entities.SchoolClass;
 import com.anywr.School.entities.Student;
 
 import lombok.AllArgsConstructor;

@@ -24,8 +24,6 @@ import com.anywr.School.repositories.SchoolClassRepository;
 import com.anywr.School.repositories.StudentRepository;
 
 
-
-
 @Service
 public class StudentService {
 	

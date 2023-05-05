@@ -5,14 +5,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
+
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.anywr.School.dto.TeacherDto;
-import com.anywr.School.entities.SchoolClass;
+
 import com.anywr.School.entities.Teacher;
 import com.anywr.School.repositories.SchoolClassRepository;
 import com.anywr.School.repositories.TeacherRepository;
@@ -43,9 +43,6 @@ public class TeacherService {
         .orElseThrow(() -> new EntityNotFoundException("Teacher not found with id" + id));
         return convertToDto(teacher);
     }
-    
-    
-    
     
     
     
