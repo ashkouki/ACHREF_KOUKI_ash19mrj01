@@ -29,4 +29,13 @@ public class StudentDto {
         this.SchoolClassId = student.getSchoolClass().getId();
     }
     
+    
+    public StudentDto(Student student, String className) {
+        this.id = student.getId();
+        this.firstName = student.getFirstName();
+        this.lastName = student.getLastName();
+        this.schoolClassName = className;
+        this.SchoolClassId = student.getSchoolClass().getId();
+    }
+
 }

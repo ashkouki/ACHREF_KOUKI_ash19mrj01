@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
-
+import org.springframework.data.domain.Sort;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,12 +15,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.anywr.School.dto.StudentMapper;  
+import com.anywr.School.dto.StudentDto;  
 
-import com.anywr.School.dto.StudentDto;
 import com.anywr.School.entities.SchoolClass;
 import com.anywr.School.entities.Student;
 import com.anywr.School.repositories.SchoolClassRepository;
 import com.anywr.School.repositories.StudentRepository;
+
+
 
 
 @Service
@@ -56,42 +59,34 @@ public class StudentService {
         return modelMapper.map(savedStudent, StudentDto.class);
     }
    
-    
-    
-    
-    public StudentDto findById(Long id) {
-        
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + id));
+ 
+  
 
-        
-        StudentDto studentDto = modelMapper.map(student, StudentDto.class);
-        studentDto.setSchoolClassName(student.getSchoolClass().getName());
-        
-        // Return the studentDto
-        return studentDto;
+    
+    public Page<StudentDto> findPaginated(int pageNo, int pageSize, String sortBy) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Page<Student> page = studentRepository.findAll(pageable);
+        return page.map(StudentMapper::toDto);
     }
+   
     
  
-    public List<StudentDto> getStudentsWithClassName( String name) {
-        List<Object[]> studentsWithClassName = studentRepository.findAllWithClassName(name);
-        List<StudentDto> studentDtos = new ArrayList<>();
-
-        if (studentsWithClassName.isEmpty()) {
-           
-            List<Student> students = studentRepository.findAll();
-            for (Student student : students) {
-                studentDtos.add(new StudentDto(student));
-            }
-        } else {
+    public Page<StudentDto> getStudentsWithClassName( String name,int pageNo, int pageSize, String sortBy) {
+    	 Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Page<Object[]> studentsWithClassName = studentRepository.findAllWithClassName(name,pageable);
+        //List<StudentDto> studentDtos = new ArrayList<>();
+      
             for (Object[] studentWithClassName : studentsWithClassName) {
                 Student student = (Student) studentWithClassName[0];
                 String schoolClassName = (String) studentWithClassName[1];
                 StudentDto studentDto = new StudentDto(student);
-                studentDtos.add(studentDto);
+                //studentDtos.add(studentDto);
             }
-        }
-        return studentDtos;
+        
+            return studentsWithClassName.map(object -> new StudentDto(
+                    (Student) object[0],
+                    (String) object[1]
+            ));
     }
     
 }

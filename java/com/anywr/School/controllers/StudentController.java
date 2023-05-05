@@ -1,9 +1,12 @@
 package com.anywr.School.controllers;
 
+import java.net.http.HttpHeaders;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,20 +30,42 @@ public class StudentController {
 	@Autowired
     private StudentService studentService;
 
-    @GetMapping("")
-    public List<StudentDto> getAllStudents() {
-        return studentService.findAll();
+	
+	
+	@GetMapping("/pagination")
+    public ResponseEntity<Page<StudentDto>> getAllStudentsWithPagination(
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        Page<StudentDto> page = studentService.findPaginated(pageNo, pageSize, sortBy);
+
+        if (page.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(page);
+        }
     }
+ 
+    @GetMapping("")
+    public ResponseEntity<List<StudentDto>> getAllStudents() {
+        List<StudentDto> studentDtos = studentService.findAll();
+        
+        if (studentDtos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+          
+        
+            return new ResponseEntity<>(studentDtos, HttpStatus.OK);
+        }}
+
+
 
     @PostMapping("")
     public StudentDto addStudent(@RequestBody StudentDto studentDTO) {
         return studentService.addStudent(studentDTO);
     }
 
-    @GetMapping("/{id}")
-    public StudentDto getStudentbyID(@PathVariable Long id) {
-        return  studentService.findById(id);
-    }
+  
    
     @DeleteMapping("/{id}")
     public void DeleteStudent(@PathVariable Long id) {
@@ -48,12 +73,14 @@ public class StudentController {
     }
     
     @GetMapping("/classname/{name}")
-    public ResponseEntity<List<StudentDto>> getStudentsWithClassName(@PathVariable String name) {
+    public ResponseEntity<Page<StudentDto>> getStudentsWithClassName(@PathVariable String name,@RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "id") String sortBy) {
     	
-    	System.out.println("className: " + name);
-        List<StudentDto> students = studentService.getStudentsWithClassName(name);
+    	Page<StudentDto> students = studentService.getStudentsWithClassName(name,pageNo, pageSize, sortBy);
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
     
+    
+
     
 }

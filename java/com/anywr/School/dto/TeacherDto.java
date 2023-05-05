@@ -15,6 +15,6 @@ public class TeacherDto {
 	    
 	    private String lastName;
 	    
-	    private String className;
+	    //private String className;
 
 }

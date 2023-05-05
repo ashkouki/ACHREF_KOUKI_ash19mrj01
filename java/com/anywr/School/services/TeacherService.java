@@ -44,10 +44,16 @@ public class TeacherService {
         return convertToDto(teacher);
     }
     
+    
+    
+    
+    
+    
+    
     private TeacherDto convertToDto(Teacher teacher) {
         TeacherDto teacherDto = modelMapper.map(teacher, TeacherDto.class);
         if (teacher.getSchoolClass() != null) {
-            teacherDto.setClassName(teacher.getSchoolClass().getName());
+            //teacherDto.setClassName(teacher.getSchoolClass().getName());
         }
         return teacherDto;
     }
@@ -58,6 +64,8 @@ public class TeacherService {
         Teacher savedTeacher = teacherRepository.save(teacher);
         return convertToDto(savedTeacher);
     }
+    
+    
     private Teacher convertToEntity(TeacherDto teacherDto) {
         Teacher teacher = modelMapper.map(teacherDto, Teacher.class);
         return teacher;
