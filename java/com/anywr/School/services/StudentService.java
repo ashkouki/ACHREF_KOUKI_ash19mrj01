@@ -15,11 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.anywr.School.dto.StudentMapper;  
+import com.anywr.School.dto.StudentMapper;
+import com.anywr.School.dto.TeacherDto;
 import com.anywr.School.dto.StudentDto;  
 
 import com.anywr.School.entities.SchoolClass;
 import com.anywr.School.entities.Student;
+import com.anywr.School.entities.Teacher;
 import com.anywr.School.repositories.SchoolClassRepository;
 import com.anywr.School.repositories.StudentRepository;
 
@@ -59,7 +61,26 @@ public class StudentService {
    
  
   
-
+   
+    public StudentDto getstudentById(Long id) {
+        Student student = studentRepository.findById(id)
+               
+        .orElseThrow(() -> new EntityNotFoundException("student not found with id" + id));
+        return convertToDto(student);
+    }
+    
+    
+    
+    
+    private StudentDto convertToDto(Student student) {
+    	StudentDto studentDto = modelMapper.map(student, StudentDto.class);
+        if (student.getSchoolClass() != null) {
+            //teacherDto.setClassName(teacher.getSchoolClass().getName());
+        }
+        return studentDto;
+    }
+    
+    
     
     public Page<StudentDto> findPaginated(int pageNo, int pageSize, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));

@@ -2,6 +2,7 @@ package com.anywr.School.controllers;
 
 import java.net.http.HttpHeaders;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anywr.School.dto.StudentDto;
+import com.anywr.School.dto.TeacherDto;
 import com.anywr.School.entities.Student;
 import com.anywr.School.services.StudentService;
 
@@ -30,6 +32,28 @@ public class StudentController {
 	@Autowired
     private StudentService studentService;
 
+	
+	@GetMapping("{id}")
+	public ResponseEntity<StudentDto> studentDto(@PathVariable Long id) {
+	 
+		try {
+		Optional<StudentDto> optionalstudentDto = Optional.of(studentService.getstudentById(id));
+		
+		if (optionalstudentDto.isPresent()) {
+		    
+		    return new ResponseEntity<>(optionalstudentDto.get(),HttpStatus.CREATED);
+		   
+		} else {
+	
+			return  new ResponseEntity<>(HttpStatus.NO_CONTENT);}
+		}
+		
+		catch(Exception e) {
+			
+			  return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			  
+		}
+		}
 	
 	
 	@GetMapping("/pagination")
